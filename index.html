@@ -1,0 +1,51 @@
+<html>
+<script>
+var accessToken;
+var instanceURL;
+
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "https://login.salesforce.com/services/oauth2/token", true);
+var data = new FormData();
+data.append("grant_type", "password");
+data.append("password", "Esolutions@1234gIe0H56pw5Diyhjli1R87pphD");
+data.append("client_id", "3MVG9pe2TCoA1Pf4rNO4CgOaIdAXerP8zZttoI4dpqLRoOSdarPdJO4cBddFkTc5PUCU_XsF6Upwouru60X4a");
+data.append("client_secret", "D4EEB54FE9A9D3380E591B480FD9225AC6EE92D16F9ADF4C5A08C56A7A252F28");
+data.append("username", "bhanugupta@salesforcedev.com");
+
+
+
+xhr.send(data);
+xhr.addEventListener("readystatechange", function () {
+  if (this.readyState === 4) {
+    console.log(this.responseText);
+    var response = JSON.parse(this.responseText);
+    instanceURL = response.instance_url;
+    accessToken = response.access_token;
+    console.log('instanceURL==',instanceURL);
+    console.log('accessToken==',accessToken);
+
+
+  }
+});  
+            
+            
+
+setTimeout(function(){
+    //if(xhr.StatusCode == 200){
+        var xhrOne = new XMLHttpRequest();
+        xhrOne.open("POST", instanceURL+"/services/data/v42.0/sobjects/contact/", true);
+        var reqOneBody = '{"LastName" : "Banu Pratap Singh"}';
+        xhrOne.setRequestHeader("Authorization","Bearer "+accessToken );
+        xhrOne.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+        xhrOne.setRequestHeader("Accept", "application/json");
+        xhrOne.onload = function () 
+        {
+            JSONResponse = xhrOne.responseText;
+            console.log('--JSONResponse ------->'+xhrOne.responseText);
+        };
+        xhrOne.send(reqOneBody);
+   // }
+}, 5000);
+  
+</script>
+</html>
