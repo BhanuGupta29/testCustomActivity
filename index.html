@@ -1,51 +1,68 @@
-<html>
-<script>
-var accessToken;
-var instanceURL;
+<!DOCTYPE html>
 
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "https://login.salesforce.com/services/oauth2/token", true);
-var data = new FormData();
-data.append("grant_type", "password");
-data.append("password", "Esolutions@1234gIe0H56pw5Diyhjli1R87pphD");
-data.append("client_id", "3MVG9pe2TCoA1Pf4rNO4CgOaIdAXerP8zZttoI4dpqLRoOSdarPdJO4cBddFkTc5PUCU_XsF6Upwouru60X4a");
-data.append("client_secret", "D4EEB54FE9A9D3380E591B480FD9225AC6EE92D16F9ADF4C5A08C56A7A252F28");
-data.append("username", "bhanugupta@salesforcedev.com");
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Service Cloud Custom Split</title>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script data-main="js/main.js" type="text/javascript" src="js/require.js"></script>
 
+	<style type="text/css">
+		body {
+			padding: 15px;
+			margin: 0;
+			font-size: 11px;
+			color: #16325c;
+			font-family: "Salesforce Sans", Arial, sans-serif;
+		}
 
+		.step {
+			display: none;
+		}
 
-xhr.send(data);
-xhr.addEventListener("readystatechange", function () {
-  if (this.readyState === 4) {
-    console.log(this.responseText);
-    var response = JSON.parse(this.responseText);
-    instanceURL = response.instance_url;
-    accessToken = response.access_token;
-    console.log('instanceURL==',instanceURL);
-    console.log('accessToken==',accessToken);
+		#step1 {
+			display: block;
+		}
 
+		input {
+			font-family: inherit;
+			display: block;
+			padding: 4px 5px;
+			font-size: 11px;
+			color: #16325c;
+			background-color: #ffffff;
+			background-image: none;
+			border: 1px solid #d8dde6;
+			border-radius: 0.25rem;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
 
-  }
-});  
-            
-            
+		input[type=text] {
+			width: 95%;
+			margin-bottom: 40px;
+		}
 
-setTimeout(function(){
-    //if(xhr.StatusCode == 200){
-        var xhrOne = new XMLHttpRequest();
-        xhrOne.open("POST", instanceURL+"/services/data/v42.0/sobjects/contact/", true);
-        var reqOneBody = '{"LastName" : "Banu Pratap Singh"}';
-        xhrOne.setRequestHeader("Authorization","Bearer "+accessToken );
-        xhrOne.setRequestHeader("Content-type", "application/json;charset=UTF-8");
-        xhrOne.setRequestHeader("Accept", "application/json");
-        xhrOne.onload = function () 
-        {
-            JSONResponse = xhrOne.responseText;
-            console.log('--JSONResponse ------->'+xhrOne.responseText);
-        };
-        xhrOne.send(reqOneBody);
-   // }
-}, 5000);
-  
-</script>
+		.inputLabel {
+			margin-bottom: 5px;
+			font-size: 8pt;
+			color: #808080;
+			text-transform: uppercase;
+		}
+	</style>
+</head>
+<body>
+	<div id="step1" class="step">
+		<p>Reading the event definition key of the journey's entry event..</p>
+		<p class="inputLabel">Event Definition Key</p>
+		<input id="select-entryevent-defkey" placeholder="journey entry event's event definition key" type="text" required="required" disabled="disabled" minlength="1" />
+	</div>
+	<div id="step2" class="step">
+		<p>Please select the ID (event data column) to pass to the custom split backend.</p>
+		<p class="inputLabel">ID</p>
+		<input id="select-id" placeholder="ID to pass to the backend" type="text" />
+		<select id="select-id-dropdown">
+		</select>
+	</div>
+</body>
 </html>
